@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import '../styles/Accesos.css'
 import axiosClient from '../axios-client';
 import { useStateContext } from '../contexts/ContextProvider';
 
 import QRCode from 'qrcode.react';
 import Modal from 'react-modal';
+
+import { jsPDF } from "jspdf";
+import html2canvas from 'html2canvas';
 
 
 export default function Accesos() {
@@ -18,10 +21,10 @@ export default function Accesos() {
 
 
 
-  const [ingreso, setIngreso] = useState('12:00');
-  const [salida, setSalida] = useState('12:12');
-  const [duracion, setDuracion] = useState('12 12 12');
-  const [costo, setCosto] = useState('12');
+  const [ingreso, setIngreso] = useState('');
+  const [salida, setSalida] = useState('');
+  const [duracion, setDuracion] = useState('');
+  const [costo, setCosto] = useState('');
 
   //contantes parte 1
   const [isEditable, setIsEditable] = useState(true);
@@ -143,7 +146,19 @@ export default function Accesos() {
   };
 
   //constantes parte 6
+      //Efectivo
+      const [modalIsOpen2, setIsOpen2] = useState(false);
 
+      const openModal2 = () => {
+        setIsOpen2(true);
+      }
+    
+      const closeModal2 = () => {
+        setIsOpen2(false);
+      }
+ 
+      
+     //QR
   const [modalIsOpen, setIsOpen] = useState(false);
 
   const openModal = () => {
@@ -154,6 +169,25 @@ export default function Accesos() {
     setIsOpen(false);
   }
 
+  const facturaRef = useRef();
+
+  const downloadPDF = () => {
+    const printButtons = document.getElementsByClassName('no-print');
+    for (let i = 0; i < printButtons.length; i++) {
+      printButtons[i].style.display = 'none';
+    }
+
+    html2canvas(facturaRef.current).then(canvas => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', [canvas.width * 0.2645833333, canvas.height * 0.2645833333]); // Crear PDF con dimensiones basadas en tamaño de imagen
+      pdf.addImage(imgData, 'PNG', 0, 0, canvas.width * 0.2645833333, canvas.height * 0.2645833333);
+      pdf.save("factura.pdf");
+
+      for (let i = 0; i < printButtons.length; i++) {
+        printButtons[i].style.display = 'block';
+      }
+    });
+  }
 
   useEffect(() => {
     getNumerosLetras();
@@ -356,7 +390,30 @@ export default function Accesos() {
           <div>
             Pagar:
             <div>
-              <button>Efectivo</button>
+              <button onClick={openModal2}>Efectivo</button>
+              <Modal
+                isOpen={modalIsOpen2}
+                onRequestClose={closeModal2}
+                contentLabel="Modal de Pago"
+                className="modal"
+              >
+                <div className="factura" ref={facturaRef}>
+                  <div className="detalles">
+                    <p>Deuda nº: {idDeuda}</p>
+                    <p>Costo: {costo}</p>
+                    <p>Duracion: {duracion}</p>
+                    <p>Costo primera hora: x</p>
+                    <p>Costo hora adicional: x</p>
+                  </div>
+                  <div className="buttons no-print">
+                    <button onClick={downloadPDF}>Imprimir</button>
+                    <button>Pagar</button>
+                  </div>
+                </div>
+              </Modal>
+            
+
+
               <button onClick={openModal}>Qr</button>
               <Modal
                 isOpen={modalIsOpen}
@@ -364,15 +421,19 @@ export default function Accesos() {
                 contentLabel="Modal de Pago"
                 className="modal"
               >
-                <div className="factura">
+                <div className="factura" ref={facturaRef}>
                   <div className="detalles">
                     <p>Deuda nº: {idDeuda}</p>
                     <p>Costo: {costo}</p>
                     <p>Duracion: {duracion}</p>
-                    <p>Costo primera hora: 3</p>
-                    <p>Costo hora adicional: 2</p>
+                    <p>Costo primera hora: x</p>
+                    <p>Costo hora adicional: x</p>
                   </div>
                   <QRCode value={`http://localhost:8000/${idDeuda}`} />
+                  <div className="buttons no-print">
+                    <button onClick={downloadPDF}>Imprimir</button>
+                    <button>Pagar</button>
+                  </div>
                 </div>
               </Modal>
 
