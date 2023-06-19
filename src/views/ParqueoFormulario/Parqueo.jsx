@@ -1,41 +1,39 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 import '../../styles/ParqueoFormulario/Parqueo.css'
-import Modal from './Modal';
+// import Modal from './Modal';
 import axiosClient from '../../axios-client';
 
 const Parqueo = ({ onParqueoClick }) => {
+  const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [filaSeleccionada, setFilaSeleccionada] = useState(null);
   const [columnaSeleccionada, setColumnaSeleccionada] = useState(null);
-  const [espacios, setEspacios] = useState([]);
-
-  // useEffect(() => {
-  //   async function fetchEspacios() {
-  //     const response = await fetch('http://127.0.0.1:8000/api/espacios');
-  //     const data = await response.json();
-  //     setEspacios(data);
-  //   }
-  //   fetchEspacios();
-  // }, []);
+  const [espacios, setEspacios] = useState({});
 
   useEffect(() => {
     axiosClient.get('/ver-espacios')
     .then(({data}) => {
-      setEspacios(data)
+      // convierte el array en un objeto para una búsqueda más eficiente
+      const espaciosObj = {};
+      data.forEach(espacio => {
+        espaciosObj[espacio.id_espacio] = espacio.estado;
+      });
+      setEspacios(espaciosObj);
+      setLoading(false);
     })
-    .catch(error =>{
-      console.log(error)
+    .catch(error => {
+      console.log(error);
     })
   }, []);
 
-  const handleClick = (fila, columna) => {
+  const handleClick = useCallback((fila, columna) => {
     console.log(`Celda clicada: fila ${fila}, columna ${columna}`);
     setFilaSeleccionada(fila);
     setColumnaSeleccionada(columna);
-    setModalOpen(false);//colocar true para ver el modal
-    onParqueoClick(fila, columna); //llama a la funcion del comp padre
-  };
+    setModalOpen(false);
+    onParqueoClick(fila, columna); 
+  }, [onParqueoClick]);
 
   const handleCloseModal = () => {
     setModalOpen(false);
@@ -43,20 +41,18 @@ const Parqueo = ({ onParqueoClick }) => {
     setColumnaSeleccionada(null);
   };
 
-
-
   const getEstadoEspacio = (fila, columna) => {
-    const espacio = espacios.find(
-      (espacio) => espacio.id_espacio === `${fila}${columna}`
-    );
-    return espacio ? espacio.estado : 'desconocido';
+    return espacios[`${fila}${columna}`] || 'desconocido';
   };
 
   const filas = [3, 5, 7, 9];
 
+  if (loading) {
+    return <div>Cargando...</div>
+  }
+
   return (
     <div className="parqueo">
-      <h2>Parqueo</h2>
       <div className="grillaTop">
         <div className="celda fila-titulo"></div>
         {[...Array(12)].map((_, j) => {
@@ -80,8 +76,8 @@ const Parqueo = ({ onParqueoClick }) => {
                   className={celdaClassName}
                   onClick={() => handleClick(i + 1, String.fromCharCode(65 + j))}
                 >
-                  {String.fromCharCode(65 + j)}
                   {i + 1}
+                  {String.fromCharCode(65 + j)}
                 </div>
               );
             }),
@@ -103,8 +99,8 @@ const Parqueo = ({ onParqueoClick }) => {
                     className={celdaClassName}
                     onClick={() => handleClick(fila + i, String.fromCharCode(65 + j))}
                     >
-                    {String.fromCharCode(65 + j)}
                     {fila + i}
+                    {String.fromCharCode(65 + j)}
                   </div>
                 );
               })}
@@ -112,12 +108,12 @@ const Parqueo = ({ onParqueoClick }) => {
           ))}
         </div>
       ))}
-      <Modal
+      {/* <Modal
         isOpen={modalOpen}
         onClose={handleCloseModal}
         fila={filaSeleccionada}
         columna={columnaSeleccionada}
-      />
+      /> */}
     </div>
   );
 };

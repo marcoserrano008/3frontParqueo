@@ -2,14 +2,31 @@ import React, { useState, useEffect } from "react";
 
 import '../styles/ParqueoFormulario/ParqueoFormulario.css';
 
+import { Link } from 'react-router-dom'
 
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../../components/ui/card"
 
-import Parqueo from "./ParqueoFormulario/Parqueo";
-import DescripcionEspacios from "./ParqueoFormulario/DescripcionEspacios";
-import EspacioOcupado from "./ParqueoFormulario/EspacioOcupado";
-import EspacioLibre from "./ParqueoFormulario/EspacioLibre";
-import EspacioReservado from "./ParqueoFormulario/EspacioReservado";
-import EspacioDeshabilitado from "./ParqueoFormulario/EspacioDeshabilitado";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../../components/ui/select"
+
+import { Button } from "../../components/ui/button"
+
+import { Input } from "../../components/ui/input"
+import { Label } from "../../components/ui/label"
+
+import Parqueo from './ParqueoFormulario/Parqueo';
 import axiosClient from "../axios-client";
 
 const ParqueoFormulario = () => {
@@ -18,37 +35,9 @@ const ParqueoFormulario = () => {
   const [columnaSeleccionada, setColumnaSeleccionada] = useState(null);
   const [estadoEspacio, setEstadoEspacio] = useState("");
 
-
-  useEffect(() => {
-    if (filaSeleccionada && columnaSeleccionada) {
-      axiosClient.get(`/espacio/${filaSeleccionada}${columnaSeleccionada}`)
-        .then(({ data }) => {
-          console.log(data)
-          console.log(data.estado)
-          setEstadoEspacio(data.estado);
-          
-        })
-        .catch(error => {
-          console.log(error);
-        })
-    }
-  }, [filaSeleccionada, columnaSeleccionada]);
-
-
-  // useEffect(() => {
-  //     if (filaSeleccionada && columnaSeleccionada) {
-  //       fetch(`http://127.0.0.1:8000/api/espacio/${columnaSeleccionada}${filaSeleccionada}`)
-  //         .then(response => response.json())
-  //         .then(data => {
-  //           console.log(data)
-  //           setEstadoEspacio(data[0]);
-  //         })
-  //         .catch(error => {
-  //           console.log(error);
-  //         });
-  //     }
-  //   }, [filaSeleccionada, columnaSeleccionada]);
-
+  const [totalEspacios, setTotalEspacios] = useState("")
+  const [espaciosLibres, setEspaciosLibres] = useState("")
+  const [espaciosOcupados, setEspaciosOcupados] = useState("")
 
 
   const handleParqueoClick = (fila, columna) => {
@@ -56,52 +45,108 @@ const ParqueoFormulario = () => {
     setColumnaSeleccionada(columna);
   }
 
+  useEffect(() => {
+    axiosClient.get('/dato-espacios')
+    .then(({data}) => {
+      console.log(data)
+      setTotalEspacios(data.totalEspacios)
+      setEspaciosLibres(data.espaciosLibres)
+      setEspaciosOcupados(data.espaciosOcupados)
+    })
+    .catch(error => {
+      console.log(error);
+    })
+  }, []);
 
   return (
-    <div className="split-screen">
-      <div className="split-screen-left">
-        <Parqueo onParqueoClick={handleParqueoClick} />
-      </div>
-      <div className="split-screen-right">
-        <div className="split-screen-top">
-          <div className="centered-top">
-            <DescripcionEspacios />
+    <div className="flex flex-row">
+
+
+      <div className="flex w-1/2 ">
+        <div className="flex-grow-0">
+          <div className="flex content-center justify-center">
+            <Card className="w-[700px]">
+              <CardHeader className="text-4xl font-bold">
+                Parqueo
+              </CardHeader>
+              <CardContent>
+                <Parqueo onParqueoClick={handleParqueoClick} />
+              </CardContent>
+            </Card>
           </div>
+
         </div>
-        <div className="split-screen-bottom">
-          <div className="centered-bot">
-            {/* <div className="split-screen-bottom"> */}
-              {/* <p>Fila: {filaSeleccionada}</p>
-                <p>Columna: {columnaSeleccionada}</p>
 
-                {estadoEspacio ? (
-                  <div>
-                    <p>Estado: {estadoEspacio.estado}</p>
+      </div>
+      <div className="flex w-1/2 justify-center content-center">
+        <div className="flex flex-col">
+          <div className="flex h-[320px] ">
+            <div className="flex justify-center content-center ">
+              <Card className="w-[500px] h-[300px]">
+                <CardHeader >
+                  <CardContent>
+                    <div className="flex flex-col mt-8">
+                      <div className="flex flex-row">
+                        <div className="h-[50px] w-[35px] bg-green-700 rounded-md border-white">
+                        </div>
+                        <div className="ml-5 text-2xl mt-2">Espacio Libre</div>
+                      </div>
+
+                      <div className="flex flex-row mt-5">
+                        <div className="h-[50px] w-[35px] bg-red-700 rounded-md border-white">
+                        </div>
+                        <div className="ml-5 text-2xl mt-2">Espacio Ocupado</div>
+                      </div>
+                      <div className="flex flex-row mt-5">
+                        <div className="h-[50px] w-[35px] bg-orange-400 rounded-md border-white">
+                        </div>
+                        <div className="ml-5 text-2xl mt-2">Espacio Reservado</div>
+                      </div>
+
+                    </div>
+
+                  </CardContent>
+                </CardHeader>
+              </Card>
+            </div>
+          </div>
+          <div className="flex justify-center content-center h-[400px]">
+            <Card className="w-[500px] h-[400px]">
+              <CardHeader >
+                <CardContent>
+                  <div className="flex flex-col text-center">
+                    <div className="text-2xl font-bold">Cantidad de espacios</div>
+                    <div className="flex justify-center content-center">
+                      <Card className="w-[120px] h-[65px]">
+                        <CardContent className="text-4xl mt-3">{totalEspacios}</CardContent>
+                      </Card>
+                    </div>
+
+                    <div className="text-2xl font-bold mt-5">Espacios Libres</div>
+                    <div className="flex justify-center content-center">
+                      <Card className="w-[120px] h-[65px]">
+                        <CardContent className="text-4xl mt-3">{espaciosLibres}</CardContent>
+                      </Card>
+                    </div>
+
+                    <div className="text-2xl font-bold mt-5">Espacios Ocupados</div>
+                    <div className="flex justify-center content-center">
+                      <Card className="w-[120px] h-[65px]">
+                        <CardContent className="text-4xl mt-3">{espaciosOcupados}</CardContent>
+                      </Card>
+                    </div>
+
                   </div>
-                ) : null} */}
 
-              <div>
-                {estadoEspacio && (
-                  <>
-                    {estadoEspacio === 'libre' && (
-                      <EspacioLibre id_espacio={filaSeleccionada + columnaSeleccionada} />
-                    )}
-                    {estadoEspacio === 'ocupado' && (
-                      <EspacioOcupado id_espacio={filaSeleccionada + columnaSeleccionada} />
-                    )}
-                    {estadoEspacio === 'reservado' && (
-                      <EspacioReservado id_espacio={filaSeleccionada + columnaSeleccionada} />
-                    )}
-                    {estadoEspacio === 'deshabilitado' && (
-                      <EspacioDeshabilitado id_espacio={filaSeleccionada + columnaSeleccionada} />
-                    )}
-                  </>
-                )}
-              </div>
+                </CardContent>
+              </CardHeader>
+            </Card>
+          </div>
+          <div className="flex mt-10 justify-center content-center">
 
-
-
-            {/* </div> */}
+            
+            <Link to="/editarParqueo"><Button className="text-xl w-[200px] h-[50px]">Editar Parqueo</Button></Link>
+            
           </div>
         </div>
       </div>

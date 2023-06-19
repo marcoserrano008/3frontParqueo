@@ -24,7 +24,19 @@ import OpcionesGuardia from "./views/OpcionesGuardia";
 import OpcionesCliente from "./views/OpcionesCliente";
 import Comunicados from "./views/Comunicados";
 import ParqueoFormulario from "./views/ParqueoFormulario";
+import {Mensajes} from "./views/Mensajes";
+import {Usuarios} from "./views/Usuarios";
 
+import ReporteDinero from "./views/subReportes/ReporteDinero"
+import ReporteIngresosSalidas from "./views/subReportes/ReporteIngresosSalidas"
+import ReporteRegistros from "./views/subReportes/ReporteRegistros"
+import ReporteReservas from "./views/subReportes/ReporteReservas"
+
+import { TableBasic } from "./views/usuarios2/TableBasic";
+import Accesosos from "./views/Accesosos";
+import EditarParqueo from "./views/EditarParqueo";
+import RegistrarVehiculo from "./views/RegistrarVehiculo";
+// import Page from "./views/payments/page"
 const router = createBrowserRouter([
     {
         path: '/',
@@ -39,7 +51,7 @@ const router = createBrowserRouter([
             {path: '/parqueo', element: <ParqueoFormulario/>},
             {path: '/reservaSimple', element: <ReservaSimple/>},
             {path: '/reservaDetallada', element: <ReservaDetallada/>},
-            {path: '/accesos', element: <Accesos/>},
+            {path: '/accesos', element: <Accesosos/>},
             {path: '/reservas', element: <Reservas/>},
             {path: '/cobros', element: <Cobros/>},
             {path: '/reportes', element: <Reportes/>},
@@ -48,11 +60,20 @@ const router = createBrowserRouter([
             {path: '/deudas', element: <Deudas/>},
             {path: '/comunicados', element: <Comunicados/>},
             {path: '/precios', element: <Precios/>},
+            // {path: '/cuenta', element: <Cuenta/>},
             {path: '/cuenta', element: <Cuenta/>},
             {path: '/opcionesAdministrador', element: <OpcionesAdministrador/>},
             {path: '/opcionesGuardia', element: <OpcionesGuardia/>},
             {path: '/opcionesCliente', element: <OpcionesCliente/>},
+            {path: '/enviar-mensajes', element: <Mensajes/>},
+            {path: '/usuarios', element: <Usuarios/>},
 
+            {path: '/reporteDinero', element: <ReporteDinero/>},
+            {path: '/reporteIngresosSalidas', element: <ReporteIngresosSalidas/>},
+            {path: '/reporteRegistros', element: <ReporteRegistros/>},
+            {path: '/reporteReservas', element: <ReporteReservas/>},
+            {path: '/editarParqueo', element: <EditarParqueo/>},
+            {path: '/registrarVehiculo', element: <RegistrarVehiculo/>},
         ]
     },
     {

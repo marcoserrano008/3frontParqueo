@@ -146,19 +146,19 @@ export default function Accesos() {
   };
 
   //constantes parte 6
-      //Efectivo
-      const [modalIsOpen2, setIsOpen2] = useState(false);
+  //Efectivo
+  const [modalIsOpen2, setIsOpen2] = useState(false);
 
-      const openModal2 = () => {
-        setIsOpen2(true);
-      }
-    
-      const closeModal2 = () => {
-        setIsOpen2(false);
-      }
- 
-      
-     //QR
+  const openModal2 = () => {
+    setIsOpen2(true);
+  }
+
+  const closeModal2 = () => {
+    setIsOpen2(false);
+  }
+
+
+  //QR
   const [modalIsOpen, setIsOpen] = useState(false);
 
   const openModal = () => {
@@ -411,7 +411,7 @@ export default function Accesos() {
                   </div>
                 </div>
               </Modal>
-            
+
 
 
               <button onClick={openModal}>Qr</button>

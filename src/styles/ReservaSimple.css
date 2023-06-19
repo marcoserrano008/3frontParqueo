@@ -1,0 +1,6 @@
+.my-time-picker .react-time-picker__inputGroup {
+    width: auto;
+  }
+  .my-time-picker .react-time-picker__inputGroup__input {
+    width: 50px;
+  }

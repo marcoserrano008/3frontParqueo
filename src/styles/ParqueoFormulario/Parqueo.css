@@ -63,16 +63,24 @@
 
 
   .estado-ocupado {
-    background-color: red;
+    background-color: rgb(185 28 28);
     color:transparent
   }
   
   .estado-libre {
-    background-color: green;
+    background-color: rgb(21 128 61);
     color:transparent
   }
   
   .estado-reservado {
-    background-color: yellow;
+    background-color: rgb(251 146 60);
     color:transparent
+  }
+
+  .estado-deshabilitado {
+    background-color: white;
+    color:transparent;
+    border: none;
+  box-shadow: none;
+  pointer-events: none;
   }
