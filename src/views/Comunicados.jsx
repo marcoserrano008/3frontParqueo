@@ -51,7 +51,7 @@ export default function Comunicados() {
                       <div className='font-extrabold'> Hasta: </div>
                       <div>{comunicado.fechaFinal}</div>
                   </div>
-                  <img src='../../public/123.png'></img>
+                  {/* <img src='../../public/123.png'></img> */}
                   <div>
 
                   </div>
