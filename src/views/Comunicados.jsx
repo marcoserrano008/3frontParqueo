@@ -51,7 +51,7 @@ export default function Comunicados() {
                       <div className='font-extrabold'> Hasta: </div>
                       <div>{comunicado.fechaFinal}</div>
                   </div>
-                  <img src={`https://4backendparqueo-production.up.railway.app${comunicado.image}`} alt="Imagen de Comunicado" />
+                  
                   <div>
 
                   </div>
