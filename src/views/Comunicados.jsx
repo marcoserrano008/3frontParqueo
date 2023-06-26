@@ -51,7 +51,7 @@ export default function Comunicados() {
                       <div className='font-extrabold'> Hasta: </div>
                       <div>{comunicado.fechaFinal}</div>
                   </div>
-                  <img src={`https://3front-parqueo.vercel.app${comunicado.image}`} alt="Imagen de Comunicado" />
+                  <img src={`https://4backendparqueo-production.up.railway.app${comunicado.image}`} alt="Imagen de Comunicado" />
                   <div>
 
                   </div>
@@ -64,16 +64,6 @@ export default function Comunicados() {
           </div>
 
         </div>
-             {/* <div>
-            {comunicados.map(comunicado => (
-                <div key={comunicado.id}>
-                    <p>Mensaje: {comunicado.message}</p>
-                    <p>Fecha de inicio: {comunicado.fechaInicio}</p>
-                    <p>Fecha de finalización: {comunicado.fechaFinal}</p>
-                    <img src={`http://127.0.0.1:8000${comunicado.image}`} alt="Imagen de Comunicado" />
-                </div>
-            ))}
-        </div>  */}
       </>
 
     )
