@@ -51,7 +51,7 @@ export default function Comunicados() {
                       <div className='font-extrabold'> Hasta: </div>
                       <div>{comunicado.fechaFinal}</div>
                   </div>
-                  <img src={`http://127.0.0.1:8000${comunicado.image}`} alt="Imagen de Comunicado" />
+                  <img src={`https://3front-parqueo.vercel.app${comunicado.image}`} alt="Imagen de Comunicado" />
                   <div>
 
                   </div>
