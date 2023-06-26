@@ -205,6 +205,7 @@ export default function ReservaDetallada() {
           if (response.data.status === '0') {
             setChoqueReserva(true)
             setIdReserva(null)
+            setInfoChoque(response.data.reservas_conflictivas)
           } else {
             setChoqueReserva(false)
             setIdReserva(response.data.reservas_creadas)
@@ -220,6 +221,7 @@ export default function ReservaDetallada() {
     }
   };
 
+  const [infoChoque, setInfoChoque] = useState(null)
   const [choqueReserva, setChoqueReserva] = useState(false)
 
   const [idReserva, setIdReserva] = useState(null)
@@ -396,6 +398,16 @@ export default function ReservaDetallada() {
                         {choqueReserva ?
                           <>
                             No se puede reservar en este horario, ya existe una reserva
+                            <div>El espacio: {filaSeleccionada}{columnaSeleccionada} ya tiene una reserva en</div>
+
+                            {infoChoque.map(choque => (
+                              <>
+                                <div>fecha: {choque.reservada_desde_fecha}</div>
+                                <div>de horas: {choque.reservada_desde_hora} a horas {choque.reservada_hasta_hora}</div>
+                                <div>-----</div>
+                              </>
+                              ))}
+                              
                           </> :
                           <>
                             <div className='flex flex-row'>
