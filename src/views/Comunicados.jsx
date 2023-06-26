@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "../../components/ui/card"
-
+import imagenLogo from "../../public/123.png"
 export default function Comunicados() {
     const [comunicados, setComunicados] = useState([])
     
@@ -51,7 +51,7 @@ export default function Comunicados() {
                       <div className='font-extrabold'> Hasta: </div>
                       <div>{comunicado.fechaFinal}</div>
                   </div>
-                  
+                  <img src='../../public/123.png'></img>
                   <div>
 
                   </div>

@@ -38,8 +38,10 @@ import {
   TableRow,
 } from "../../components/ui/table"
 
+import imagenLogo from "../../public/123.png"
 
 export default function OpcionesAdministrador() {
+
   const [image, setImage] = useState(null);
   const [fechaInicio, setFechaInicio] = useState(null);
   const [fechaFinal, setFechaFinal] = useState(null);
@@ -70,7 +72,13 @@ export default function OpcionesAdministrador() {
     // Crea un nuevo objeto FormData
     let formData = new FormData();
     formData.append('message', message);
-    formData.append('image', image);
+
+    // if (image) {  // si la imagen fue seleccionada por el usuario
+    //   formData.append('image', '../../public/123.png');
+    // } else {  // si no se seleccionó ninguna imagen
+    //   formData.append('image', '../../public/123.png');
+    // }
+
 
     let fechaInicioIso = new Date(fechaInicio).toISOString().substring(0, 10);
     let fechaFinalIso = new Date(fechaFinal).toISOString().substring(0, 10);
@@ -186,17 +194,7 @@ export default function OpcionesAdministrador() {
           </div>
           <div className='flex justify-center content-center'>
             <div className='flex mt-10'>
-              <Card>
-                <CardHeader className='font-bold text-lg'>
-                  Subir Imagen:
-                </CardHeader>
-                <CardContent>
-                  <div>
-                    <input type="file" name="image" onChange={handleImageChange} />
-                    {image && <img src={URL.createObjectURL(image)} alt="Imagen cargada" style={{ width: '200px' }} />}
-                    </div>
-                </CardContent>
-              </Card>
+
             </div>
           </div>
 
