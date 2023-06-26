@@ -58,7 +58,7 @@ export default function Reservas() {
       <div className='flex justify-center content-center'>
         <div className='w-[1200px] mt-10'>
           <Table>
-            <TableCaption>Lista de Usuarios</TableCaption>
+            <TableCaption>Lista de Reservas</TableCaption>
             <TableHeader>
               <TableRow>
                 <TableHead className="w-[100px]">ID</TableHead>

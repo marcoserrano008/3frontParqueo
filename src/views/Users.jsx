@@ -56,16 +56,21 @@ export default function Users() {
     <>
     <div className='text-4xl font-semibold'>Lista de Usuarios    </div>
 <div className='flex justify-center content-center'>
-<div className='w-[1200px] mt-10'>
+<div className='w-[1400px] mt-10'>
     <Table>
       <TableCaption>Lista de Usuarios</TableCaption>
       <TableHeader>
         <TableRow>
           <TableHead className="w-[100px]">ID</TableHead>
           <TableHead>Nombre</TableHead>
+          <TableHead>Apellidos</TableHead>
           <TableHead>Correo</TableHead>
+          <TableHead>Celular</TableHead>
           <TableHead>Fecha de creacion</TableHead>
           <TableHead>Opciones</TableHead>
+          
+          
+          
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -73,19 +78,21 @@ export default function Users() {
           <TableRow key={user.id}>
             <TableCell className="font-medium">{user.id}</TableCell>
             <TableCell>{user.name}</TableCell>
+            <TableCell>{user.apellido_paterno} {user.apellido_materno}</TableCell>
             <TableCell>{user.email}</TableCell>
+            <TableCell>{user.celular}</TableCell>
             <TableCell>{user.created_at}</TableCell>
             <TableCell>
               
-              <Button className='mr-2 bg-orange-400 text-black'>
+              <Button className='mr-2 bg-orange-400 text-black hover:bg-orange-500'>
                 <Link to={'/users/'+user.id} >Editar</Link>
               </Button>
-              <Button onClick={ev => onDelete(user)} className='bg-red-800'>Eliminar</Button>
+              <Button onClick={ev => onDelete(user)} className='bg-red-800 hover:bg-red-900'>Eliminar</Button>
             </TableCell>
           </TableRow>
         ))}
       </TableBody>
-    </Table>
+    </Table>  
     </div>
 </div>
 

@@ -47,7 +47,7 @@ import { useStateContext } from '../contexts/ContextProvider';
 // Función independiente para calcular el precio y las horas
 const calculatePriceAndHours = (startTime, endTime, dateRange) => {
   if (!startTime || !endTime || !dateRange) {
-    return { price: '-', hours: 0 };
+    return { price: '-', hours: 0, minutes: 0 };
   }
 
   // Crear objetos de fecha para la hora de inicio y de fin en la fecha "from"
@@ -60,18 +60,22 @@ const calculatePriceAndHours = (startTime, endTime, dateRange) => {
 
   // Calcular la diferencia en horas, redondear al alza
   let diffInHours = Math.abs(end - start) / (1000 * 60 * 60);
-  diffInHours = Math.ceil(diffInHours);
+  let roundedDiffInHours = Math.ceil(diffInHours);
+
+  // Calcular la diferencia exacta en minutos
+  let diffInMinutes = Math.abs(end - start) / (1000 * 60);
 
   // Si la diferencia es negativa, devolver un guion y cero horas
   if (diffInHours <= 0) {
-    return { price: '-', hours: 0 };
+    return { price: '-', hours: 0, minutes: 0 };
   }
 
   // Calcular el precio: 3 por la primera hora, 2 por cada hora adicional
-  let price = 3 + 2 * (diffInHours - 1);
+  let price = 3 + 2 * (roundedDiffInHours - 1);
 
-  return { price, hours: diffInHours };
+  return { price, hours: roundedDiffInHours, minutes: diffInMinutes };
 }
+
 
 
 
@@ -124,7 +128,17 @@ export default function ReservaSimple() {
   const [priceData, setPriceData] = useState({ price: '-', hours: 0 });
 
   const [placa, setPlaca] = useState("");
+  const [vehiculos, setVehiculos] = useState([]);
   useEffect(() => {
+
+    axiosClient.get('/list-vehiculo')
+      .then(response => {
+        setVehiculos(response.data);
+      })
+      .catch(() => {
+        console.error('Hubo un error al obtener los vehiculos', error);
+      })
+
     // Asegúrate de que todas las variables necesarias están definidas
     if (startTime && endTime && selectedDate) {
       const data = calculatePriceAndHours(startTime, endTime, selectedDate);
@@ -137,10 +151,11 @@ export default function ReservaSimple() {
 
   const [duracionMinutos, setDuracionMinutos] = useState('')
 
+  const [placaSeleccionada, setPlacaSeleccionada] = useState("");
 
   const handleButtonClick = () => {
     // Asegúrate de que todas las variables necesarias están definidas
-    if (startTime && endTime && selectedDate && placa) {
+    if (startTime && endTime && selectedDate && (placa || placaSeleccionada)) {
       const data = calculatePriceAndHours(startTime, endTime, selectedDate);
 
       // Convertir la fecha "from" a formato AAAA-MM-DD
@@ -158,10 +173,10 @@ export default function ReservaSimple() {
       // Crear el objeto de datos para el POST
       const postData = {
         id_espacio: `${filaSeleccionada}${columnaSeleccionada}`,
-        placa_vehiculo: placa,
+        placa_vehiculo: switchState ? placaSeleccionada : placa,
         reservada_desde_fecha: formattedFromDate,
         reservada_desde_hora: `${String(startTime.hour).padStart(2, '0')}:${String(startTime.minute).padStart(2, '0')}`,
-        duracion_minutos: data.hours * 60,
+        duracion_minutos: data.minutes,
         tipo: 'hora',
         costo: data.price,
       };
@@ -182,9 +197,12 @@ export default function ReservaSimple() {
         })
         .catch(error => {
           console.error('Error al hacer la solicitud a la API: ', error);
+
         });
     } else {
       console.error('Faltan datos necesarios para realizar la solicitud a la API.');
+      console.log(postData)
+      console.log("as")
     }
   };
 
@@ -195,7 +213,7 @@ export default function ReservaSimple() {
   const [rolUsuario, setRolUsuario] = useState(null)
 
   const pagarClick = () => {
-    
+
     const postData = {
       id_reserva: idReserva,
       placa: placa,
@@ -226,7 +244,7 @@ export default function ReservaSimple() {
 
   return (
     <>
-
+      <div className='font-bold text-3xl mb-5'>Reserva Simple</div>
       <div className='flex flex-row px-5'>
         <div className='w-1/2'>
           <div className='flex justify-center'>
@@ -285,14 +303,15 @@ export default function ReservaSimple() {
                     {switchState ? (
                       <div className="flex flex-col space-y-1.5 mt-2">
                         <Label htmlFor="name">Seleccione la placa:</Label>
-                        <Select>
+                        <Select onValueChange={value => setPlacaSeleccionada(value)}>
                           <SelectTrigger>
-                            <SelectValue placeholder="Select" />
+                            <SelectValue placeholder="Seleccione la placa" />
                             <SelectContent position="popper">
-                              <SelectItem value="AAA1001">AAA1001</SelectItem>
-                              <SelectItem value="AAA1002">AAA1002</SelectItem>
-                              <SelectItem value="BBB1003">BBB1003</SelectItem>
-                              <SelectItem value="CCC1001">CCC1001</SelectItem>
+                              {vehiculos.map(vehiculo => (
+                                <SelectItem key={vehiculo.id_vehiculo} value={vehiculo.placa} >
+                                  {vehiculo.placa}
+                                </SelectItem>
+                              ))}
                             </SelectContent>
                           </SelectTrigger>
                         </Select>
@@ -334,7 +353,20 @@ export default function ReservaSimple() {
 
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
-                    <Button onClick={handleButtonClick}>Pagar</Button>
+
+                    <Button
+                      disabled={
+                        !filaSeleccionada ||
+                        !columnaSeleccionada ||
+                        (priceData.price=='-') ||
+                        !startTime ||
+                        !endTime ||
+                        (!placa && !placaSeleccionada)
+                      }
+                      onClick={handleButtonClick}
+                    >
+                      Pagar
+                    </Button>
                   </AlertDialogTrigger>
                   <AlertDialogContent>
                     <AlertDialogHeader>
@@ -371,20 +403,25 @@ export default function ReservaSimple() {
                                     <div className='font-bold text-black'>Hasta Hora:</div>
                                     <div>
                                       {endTime ? <>{`${String(endTime.hour).padStart(2, '0')}:${String(endTime.minute).padStart(2, '0')}`}</> : <>-</>}
-                                      </div>
+                                    </div>
                                   </div>
                                 </div>
 
 
 
-                                <div className='font-bold text-black mt-5'>Tiempo reservado:</div>
+                                <div className='font-bold text-black mt-5'>Tiempo facturado*:</div>
                                 <div>{priceData.hours} Horas</div>
                                 <div className='font-bold text-black mt-5'>Costo:</div>
                                 <div>{priceData.price} Bs.</div>
+                                <div className='font-bold text-black mt-5'>Placa vehiculo:</div>
+                                <div>{switchState ? placaSeleccionada : placa}</div>
+                                <div className='font-bold text-black mt-5'>Espacio:</div>
+                                <div>{filaSeleccionada}{columnaSeleccionada}</div>
                                 <div className='font-bold text-black mt-5'>Usuario:</div>
                                 <div>{nombreUsuario}</div>
                                 <div className='font-bold text-black mt-5'>Rol:</div>
                                 <div>{rolUsuario}</div>
+                                <div className="mt-5">*Todo tiempo menor a una hora es redondeado a una hora para ser facturado</div>
                               </div>
 
                               <div className='flex justify-center items-center w-1/2'>

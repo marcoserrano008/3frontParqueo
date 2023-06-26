@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useStateContext } from '../contexts/ContextProvider';
 import axiosClient from '../axios-client';
-
+import { Button } from "../../components/ui/button"
 export default function Login() {
 
     const emailRef = useRef();
@@ -39,9 +39,11 @@ export default function Login() {
         <div className='login-signup-form animated fadeInDown'>
             <div className='form'>
                 <form onSubmit={onSubmit}>
-                    <h1 className='title'>
-                        Iniciar Sesión
-                    </h1>
+                    <div className='text-center text-2xl font-bold text-slate-700 mb-5'>
+                    Iniciar Sesión
+                    </div>
+                        
+                    
                     {errors && <div className="alert">
                 {Object.keys(errors).map(key => (
                     <p key={key}>{errors[key][0]}</p>
@@ -49,7 +51,10 @@ export default function Login() {
                 </div>}
                     <input ref={emailRef} type='email' placeholder='Email' />
                     <input ref={passwordRef} type='password' placeholder='Password' />
-                    <button className='btn btn-block'>Login</button>
+                    <div className='flex justify-center content-center'>
+                    <Button className=' w-[220px] h-[50px] text-xl'>Login</Button>
+                    </div>
+                   
                     <p className='message'>
                         ¿No estas registrado? <Link to="/signup">Registrate</Link>
                     </p>

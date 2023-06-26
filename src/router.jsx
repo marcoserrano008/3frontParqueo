@@ -36,6 +36,7 @@ import { TableBasic } from "./views/usuarios2/TableBasic";
 import Accesosos from "./views/Accesosos";
 import EditarParqueo from "./views/EditarParqueo";
 import RegistrarVehiculo from "./views/RegistrarVehiculo";
+import EditarCuenta from "./views/EditarCuenta";
 // import Page from "./views/payments/page"
 const router = createBrowserRouter([
     {
@@ -74,6 +75,8 @@ const router = createBrowserRouter([
             {path: '/reporteReservas', element: <ReporteReservas/>},
             {path: '/editarParqueo', element: <EditarParqueo/>},
             {path: '/registrarVehiculo', element: <RegistrarVehiculo/>},
+            {path: '/editarCuenta', element: <EditarCuenta/>},
+            {path: '/editarCuenta/:id', element: <EditarCuenta key="userUpdate"/>},
         ]
     },
     {

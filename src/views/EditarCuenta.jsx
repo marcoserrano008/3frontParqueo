@@ -13,7 +13,7 @@ import {
 
 import { Input } from "../../components/ui/input"
 import { Button } from "../../components/ui/button"
-export default function UserForm() {
+export default function EditarCuenta() {
   const { id } = useParams()
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false)
@@ -54,8 +54,8 @@ export default function UserForm() {
       axiosClient.put(`/users/${user.id}`, user)
         .then(() => {
           //todo show notification
-          setNotification('Se ha modificado el usuario')
-          navigate('/users')
+          setNotification('Se ha modificado su cuenta')
+          navigate('/cuenta')
         })
         .catch(err => {
           const response = err.response;
@@ -83,10 +83,10 @@ export default function UserForm() {
   return (
     <>
       {user.id &&
-        <div className='flex flex-row'><div className='font-bold text-2xl'>Actualizar usuario : </div>
-          <div className='text-2xl'> {user.name}</div>
+        <div className='flex flex-row'><div className='font-bold text-2xl'>Modificar mi cuenta</div>
 
-          <Link to="/users"><Button className='ml-[700px]'>Regresar</Button></Link>
+
+          <Link to="/cuenta"><Button className='ml-[850px]'>Regresar</Button></Link>
         </div>
 
       }

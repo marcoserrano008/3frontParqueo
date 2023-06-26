@@ -2,7 +2,7 @@ import MUIDataTable from "mui-datatables";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import React from "react";
 import axios from 'axios';
-
+import imagenQR from "../imgs/qr1.png"
 import { Textarea } from "../../components/ui/textarea"
 import { Button } from "../../components/ui/button";
 
@@ -26,11 +26,14 @@ const darkTheme = createTheme({
 })
 
 export class Mensajes extends React.Component {
+
+   
     constructor(props) {
         super(props);
         this.state = {
             selectedRows: [],
-            data: []
+            data: [],
+            mensaje: '', // Agrega esto para mantener el estado del mensaje
         };
     }
 
@@ -45,21 +48,18 @@ export class Mensajes extends React.Component {
             });
     }
 
-    postData = async (selectedRows) => {
+    postData = async () => { // Remueve 'selectedRows' ya que puedes acceder a través del estado
         try {
-            // const response = await axios.post('http://example.com/api', selectedRows);
-            // console.log('Respuesta de la API: ', response);
             let numeros = [];
-            selectedRows.forEach(row => {
-                // Asumiendo que el número siempre es el cuarto elemento
+            this.state.selectedRows.forEach(row => { // Usar 'this.state.selectedRows'
                 numeros.push(String(row[3]));
             });
             let body = {
-                "mensaje":"Hola mundo",
+                "mensaje": this.state.mensaje, // Usa 'this.state.mensaje'
                 "destinatarios": numeros
             }
             console.log(body)
-            axiosClient.post('/enviar-mesaje', body)
+            axiosClient.post('/enviar-mensaje', body)
             .then(response => {
               console.log(response.data);
             })
@@ -76,12 +76,18 @@ export class Mensajes extends React.Component {
         this.setState({ selectedRows: selectedData });
     }
 
+    // Método para manejar el cambio del mensaje
+    handleMensajeChange = (e) => {
+        this.setState({ mensaje: e.target.value });
+    }
+
     render() {
         const columns = ["Nombre", "Apellido Paterno", "Apellido Materno", "Celular"];
         const options = {
             filterType: 'checkbox',
             onRowSelectionChange: this.handleRowSelectionChange,
         }
+    
         return (
             <>
                 <div className="flex flex-col">
@@ -92,13 +98,20 @@ export class Mensajes extends React.Component {
                                 Mensaje:
                             </div>
                             <div className="w-3/5">
-                                <Textarea className="h-[150px]" placeholder="Ingrese el mensaje." />
+                                <Textarea 
+                                    className="h-[150px]" 
+                                    placeholder="Ingrese el mensaje."
+                                    value={this.state.mensaje} // Usa 'this.state.mensaje'
+                                    onChange={this.handleMensajeChange} // Agrega este método para manejar los cambios
+                                />
                             </div>
                             <div className="w-1/5">
                             </div>
                         </div>
 
+
                         <div className="flex justify-center content-center mt-5">
+                            <div>
                             <AlertDialog>
                                 <AlertDialogTrigger asChild>
                                     <Button >Enviar Mensaje</Button>
@@ -109,10 +122,7 @@ export class Mensajes extends React.Component {
                                         <AlertDialogDescription>
                                             <>
                                                 Enviar mensajes
-
                                             </>
-
-
                                         </AlertDialogDescription>
                                     </AlertDialogHeader>
                                     <AlertDialogFooter>
@@ -121,6 +131,33 @@ export class Mensajes extends React.Component {
                                     </AlertDialogFooter>
                                 </AlertDialogContent>
                             </AlertDialog>
+                            </div>
+
+                            <div className="ml-10">
+                            <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                    <Button >Habilitar Numero</Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                        <AlertDialogTitle>Habilitar Numero</AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                            <>
+                                                Escanee el QR
+                                            </>
+                                        </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <div className="borded border-black ">
+                                    <img  src={imagenQR} alt="Descripción de la imagen" />
+                                    </div>
+                                    <AlertDialogFooter>
+                                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                                        <AlertDialogAction>Aceptar</AlertDialogAction>
+                                    </AlertDialogFooter>
+                                </AlertDialogContent>
+                            </AlertDialog>
+                            </div>
+
                         </div>
                     </div>
 

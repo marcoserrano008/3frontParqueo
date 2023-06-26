@@ -81,18 +81,18 @@ export default function DefaultLayout() {
                             <ListItemPrefix>
                                 <CursorArrowRippleIcon className="h-5 w-5" />
                             </ListItemPrefix>
-                            Reserva Simple
+                            Reserva Continua
                         </ListItem>
                     </Link>
 
-                    {/* <Link to="/reservaDetallada">
+                    <Link to="/reservaDetallada">
                         <ListItem className={location.pathname === "/reservaDetallada" ? "bg-white text-black" : "" + " hover:bg-gray-700 hover:text-white"}>
                             <ListItemPrefix>
                                 <CursorArrowRippleIcon className="h-5 w-5" />
                             </ListItemPrefix>
-                            Reserva Detallada
+                            Reserva por intervalos
                         </ListItem>
-                    </Link> */}
+                    </Link>
 
                     {rol.rol === 'administrador' &&
                         <>
@@ -233,14 +233,14 @@ export default function DefaultLayout() {
                         </ListItem>
                     </Link>
 
-                    {/* <Link to="/cuenta">
+                    <Link to="/cuenta">
                         <ListItem className={location.pathname === "/cuenta" ? "bg-white text-black" : "" + " hover:bg-gray-700 hover:text-white"}>
                             <ListItemPrefix>
                                 <UserCircleIcon className="h-5 w-5" />
                             </ListItemPrefix>
                             Cuenta
                         </ListItem>
-                    </Link> */}
+                    </Link>
 
                     {/* Similar changes to all ListItems... */}
                 </List>
